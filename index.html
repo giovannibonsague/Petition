@@ -6,7 +6,7 @@
 <title>Harada Park & Pool Day — Fee Petition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=IBM+Plex+Sans:wght@500;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
 <style>
   :root {
@@ -355,8 +355,8 @@
     </div>
     <div>
       <label for="statement">Statement (optional)</label>
-      <textarea id="statement" maxlength="400" placeholder="Add a sentence or two about why this matters to you"></textarea>
-      <div class="char-count"><span id="statement-count">0</span>/400</div>
+      <textarea id="statement" maxlength="500" placeholder="Add a sentence or two about why this matters to you"></textarea>
+      <div class="char-count"><span id="statement-count">0</span>/500</div>
     </div>
     <div>
       <label>Signature (optional)</label>
@@ -583,8 +583,8 @@
     }
 
     const statementText = statementInput.value.trim();
-    if (statementText.length > 280) {
-      statusEl.textContent = 'Statement must be 280 characters or fewer.';
+    if (statementText.length > 500) {
+      statusEl.textContent = 'Statement must be 500 characters or fewer.';
       statusEl.className = 'status error';
       return;
     }
