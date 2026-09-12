@@ -355,8 +355,8 @@
     </div>
     <div>
       <label for="statement">Statement (optional)</label>
-      <textarea id="statement" maxlength="280" placeholder="Add a sentence or two about why this matters to you"></textarea>
-      <div class="char-count"><span id="statement-count">0</span>/280</div>
+      <textarea id="statement" maxlength="400" placeholder="Add a sentence or two about why this matters to you"></textarea>
+      <div class="char-count"><span id="statement-count">0</span>/400</div>
     </div>
     <div>
       <label>Signature (optional)</label>
@@ -515,8 +515,7 @@
   }
 
   const BLOCKED_WORDS = [
-    'fuck', 'shit', 'bitch', 'asshole', 'bastard', 'slut', 'whore',
-    'dick', 'pussy', 'cunt', 'fag', 'retard', 'killyourself', 'kys'
+    'tung','sahur'
   ];
   const LEET_MAP = { '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't', '8': 'b', '@': 'a', '$': 's', '!': 'i' };
   function normalizeForFilter(text) {
