@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harada Park & Pool Day — Fee Petition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
+<style>
+  :root {
+    --paper: #EFF3F1;
+    --ink: #16241F;
+    --sub: #4B5A54;
+    --blue: #0F5C66;
+    --blue-dim: #0C4A52;
+    --red: #B23A2C;
+    --line: #C7D2CD;
+    --card: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    line-height: 1.55;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .wrap {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 48px 22px 90px;
+    position: relative;
+  }
+
+  .lane {
+    display: flex;
+    height: 5px;
+    width: 100%;
+    margin: 0 0 28px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .lane span { flex: 1; }
+  .lane span:nth-child(1) { background: var(--blue); }
+  .lane span:nth-child(2) { background: var(--card); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .lane span:nth-child(3) { background: var(--red); }
+  .lane span:nth-child(4) { background: var(--card); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .lane span:nth-child(5) { background: var(--blue); }
+
+  .kicker {
+    font-size: 13px;
+    color: var(--sub);
+    margin: 0 0 14px;
+    max-width: 34ch;
+  }
+
+  h1 {
+    font-family: 'Zilla Slab', serif;
+    font-weight: 600;
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 0 0 18px;
+    max-width: 21ch;
+    color: var(--ink);
+  }
+
+  .lede {
+    font-size: 16px;
+    color: var(--sub);
+    max-width: 56ch;
+    margin: 0 0 34px;
+  }
+
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  .count-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0 0 34px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .count-number {
+    font-family: 'Zilla Slab', serif;
+    font-weight: 700;
+    font-size: 40px;
+    color: var(--blue);
+  }
+
+  .count-label {
+    font-size: 14px;
+    color: var(--sub);
+  }
+
+  form {
+    display: grid;
+    gap: 13px;
+    margin-bottom: 10px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 22px;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 13px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    color: var(--sub);
+    margin-bottom: 6px;
+  }
+
+  input {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+  }
+
+  input:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 18%, transparent);
+  }
+
+  textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    resize: vertical;
+    min-height: 70px;
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 18%, transparent);
+  }
+
+  .char-count {
+    font-size: 12px;
+    color: var(--sub);
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  .sig-pad-wrap {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+    overflow: hidden;
+  }
+
+  #signature-pad {
+    display: block;
+    width: 100%;
+    height: 130px;
+    touch-action: none;
+    overscroll-behavior: none;
+    -ms-touch-action: none;
+    cursor: crosshair;
+  }
+
+  .sig-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+  }
+
+  .sig-hint {
+    font-size: 12px;
+    color: var(--sub);
+  }
+
+  .clear-sig {
+    background: none;
+    border: none;
+    color: var(--blue);
+    font-size: 13px;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .clear-sig:hover { color: var(--blue-dim); }
+
+  button[type="submit"] {
+    margin-top: 4px;
+    padding: 12px 18px;
+    background: var(--blue-dim);
+    color: #F5F8F7;
+    border: none;
+    border-radius: 4px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button[type="submit"]:hover { background: var(--blue); }
+  button[type="submit"]:disabled {
+    background: var(--line);
+    color: var(--sub);
+    cursor: not-allowed;
+  }
+
+  .status {
+    font-size: 14px;
+    min-height: 20px;
+  }
+  .status.error { color: var(--red); }
+
+  .signed-note {
+    margin-top: 12px;
+    padding: 13px 15px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--blue);
+    border-radius: 4px;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .config-note {
+    margin: 0 0 28px;
+    padding: 14px 16px;
+    background: var(--card);
+    border: 1px solid var(--red);
+    border-radius: 4px;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .config-note code {
+    background: var(--paper);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 13px;
+  }
+
+  .list-heading {
+    font-family: 'Zilla Slab', serif;
+    font-size: 19px;
+    font-weight: 600;
+    margin: 44px 0 14px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--sub);
+    font-size: 12px;
+    padding: 0 0 8px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  td {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  td.id-col { color: var(--sub); font-variant-numeric: tabular-nums; width: 90px; }
+
+  .empty-row td {
+    color: var(--sub);
+    padding: 16px 0;
+  }
+
+  .refresh {
+    background: none;
+    border: none;
+    color: var(--blue);
+    font-size: 13px;
+    padding: 0;
+    margin-top: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .refresh:hover { color: var(--blue-dim); }
+
+  @media (max-width: 460px) {
+    .kicker { padding-right: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lane"><span></span><span></span><span></span><span></span><span></span></div>
+
+  <div class="kicker">Eastvale Elementary — 6th grade trip to Harada Park & the pool</div>
+  <h1>The $80 trip fee deserves a clear explanation.</h1>
+  <p class="lede">
+    We're asking the district for an itemized breakdown of the fee, and for students
+    to get a say in which extras — like the DJ — stay or go, instead of the full list
+    being decided for them. Add your name below.
+  </p>
+  <p class="lede">
+    The district's current "financial aid" for this trip isn't a waiver at all — it
+    depends on <strong>other parents volunteering to sponsor a student's $80</strong>,
+    rather than the school covering it. That shouldn't be the only option for a family
+    that can't pay.
+  </p>
+
+  <div id="config-note-holder"></div>
+
+  <div class="count-row">
+    <span class="count-number" id="signature-count">—</span>
+    <span class="count-label">students have signed</span>
+  </div>
+
+  <form id="petition-form">
+    <div>
+      <label for="student-id">Student ID (6 digits)</label>
+      <input id="student-id" inputmode="numeric" maxlength="6" placeholder="123456" required>
+    </div>
+    <div class="field-row">
+      <div>
+        <label for="first-name">First name</label>
+        <input id="first-name" maxlength="20" placeholder="First" required>
+      </div>
+      <div>
+        <label for="last-name">Last name</label>
+        <input id="last-name" maxlength="20" placeholder="Last" required>
+      </div>
+    </div>
+    <div>
+      <label for="statement">Statement (optional)</label>
+      <textarea id="statement" maxlength="280" placeholder="Add a sentence or two about why this matters to you"></textarea>
+      <div class="char-count"><span id="statement-count">0</span>/280</div>
+    </div>
+    <div>
+      <label>Signature (optional)</label>
+      <div class="sig-pad-wrap">
+        <canvas id="signature-pad"></canvas>
+      </div>
+      <div class="sig-actions">
+        <span class="sig-hint">Draw with mouse, finger, or trackpad</span>
+        <button type="button" class="clear-sig" id="clear-signature">Clear</button>
+      </div>
+    </div>
+    <button type="submit" id="submit-btn">Sign the petition</button>
+    <div class="status" id="status"></div>
+  </form>
+  <div id="signed-note-holder"></div>
+
+  <div class="list-heading">Who's signed</div>
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Name</th><th>Statement</th></tr>
+    </thead>
+    <tbody id="signatures-body">
+      <tr class="empty-row"><td colspan="3">Loading…</td></tr>
+    </tbody>
+  </table>
+  <button class="refresh" id="refresh-btn">Refresh list</button>
+
+</div>
+
+<script>
+(function () {
+  // ---- Configure these two values from Project Settings > API in Supabase ----
+  const SUPABASE_URL = 'https://jkowcefkafcaptxviogq.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_c2qJ2EsrIL1NCPJ-sJjmPg_bw_Kbu1i';
+  // -----------------------------------------------------------------------------
+
+  const DEVICE_KEY = 'harada_petition_signed';
+
+  const form = document.getElementById('petition-form');
+  const idInput = document.getElementById('student-id');
+  const firstInput = document.getElementById('first-name');
+  const lastInput = document.getElementById('last-name');
+  const submitBtn = document.getElementById('submit-btn');
+  const statusEl = document.getElementById('status');
+  const signedNoteHolder = document.getElementById('signed-note-holder');
+  const configNoteHolder = document.getElementById('config-note-holder');
+  const countEl = document.getElementById('signature-count');
+  const bodyEl = document.getElementById('signatures-body');
+  const refreshBtn = document.getElementById('refresh-btn');
+  const statementInput = document.getElementById('statement');
+  const statementCount = document.getElementById('statement-count');
+  const canvas = document.getElementById('signature-pad');
+  const clearSigBtn = document.getElementById('clear-signature');
+
+  // ---------- Config check ----------
+  const isConfigured = SUPABASE_URL.indexOf('http') === 0 && SUPABASE_ANON_KEY.length > 20;
+
+  if (!isConfigured) {
+    configNoteHolder.innerHTML =
+      '<div class="config-note">This page isn\'t connected to a database yet. ' +
+      'Open the file and replace <code>YOUR_SUPABASE_URL</code> and ' +
+      '<code>YOUR_SUPABASE_ANON_KEY</code> near the bottom with the values from ' +
+      'your Supabase project\'s Settings &rarr; API page.</div>';
+    form.querySelectorAll('input, textarea, button').forEach(function (el) { el.disabled = true; });
+    bodyEl.innerHTML = '<tr class="empty-row"><td colspan="3">Not connected yet.</td></tr>';
+    countEl.textContent = '0';
+    refreshBtn.disabled = true;
+    return; // stop here, nothing below will run or throw
+  }
+
+  let supabase;
+  try {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } catch (err) {
+    configNoteHolder.innerHTML =
+      '<div class="config-note">Could not connect to the database. Double-check the URL and key.</div>';
+    form.querySelectorAll('input, textarea, button').forEach(function (el) { el.disabled = true; });
+    return;
+  }
+
+  // ---------- Signature pad ----------
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+  let hasSignature = false;
+  let last = null;
+
+  function resizeCanvas() {
+    const ratio = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * ratio;
+    canvas.height = rect.height * ratio;
+    ctx.scale(ratio, ratio);
+    ctx.strokeStyle = '#16241F';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  canvas.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    drawing = true;
+    last = getPos(e);
+    document.body.style.overflow = 'hidden';
+    canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointermove', function (e) {
+    if (!drawing) return;
+    e.preventDefault();
+    const pos = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    last = pos;
+    hasSignature = true;
+  });
+  function endStroke() {
+    drawing = false;
+    document.body.style.overflow = '';
+  }
+  window.addEventListener('pointerup', endStroke);
+  window.addEventListener('pointercancel', endStroke);
+
+  clearSigBtn.addEventListener('click', function () {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasSignature = false;
+  });
+
+  statementInput.addEventListener('input', function () {
+    statementCount.textContent = statementInput.value.length;
+  });
+
+  function lockFormAsSigned(idUsed) {
+    form.querySelectorAll('input, textarea, button').forEach(function (el) { el.disabled = true; });
+    signedNoteHolder.innerHTML =
+      '<div class="signed-note">This device has already signed (ID ' + idUsed +
+      '). Only one signature per student is counted.</div>';
+  }
+
+  function checkDeviceLock() {
+    const saved = localStorage.getItem(DEVICE_KEY);
+    if (saved) lockFormAsSigned(saved);
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  const BLOCKED_WORDS = [
+    'fuck', 'shit', 'bitch', 'asshole', 'bastard', 'slut', 'whore',
+    'dick', 'pussy', 'cunt', 'fag', 'retard', 'killyourself', 'kys'
+  ];
+  const LEET_MAP = { '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't', '8': 'b', '@': 'a', '$': 's', '!': 'i' };
+  function normalizeForFilter(text) {
+    let out = text.toLowerCase();
+    out = out.replace(/[0134578@$!]/g, function (ch) { return LEET_MAP[ch]; });
+    out = out.replace(/[^a-z]/g, '');
+    out = out.replace(/(.)\1+/g, '$1');
+    return out;
+  }
+  function containsBlockedWord(text) {
+    const normalized = normalizeForFilter(text);
+    return BLOCKED_WORDS.some(function (w) { return normalized.indexOf(w) !== -1; });
+  }
+
+  async function loadSignatures() {
+    try {
+      const { data, error, count } = await supabase
+        .from('petition_public')
+        .select('student_id, first_name, last_name, statement', { count: 'exact' })
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      countEl.textContent = count != null ? count : data.length;
+
+      if (!data.length) {
+        bodyEl.innerHTML = '<tr class="empty-row"><td colspan="3">No signatures yet — be the first.</td></tr>';
+        return;
+      }
+
+      bodyEl.innerHTML = data.map(function (row) {
+        const statementCell = row.statement ? escapeHtml(row.statement) : '—';
+        return '<tr><td class="id-col">' + escapeHtml(row.student_id) + '</td><td>' +
+          escapeHtml(row.first_name) + ' ' + escapeHtml(row.last_name) + '</td><td>' +
+          statementCell + '</td></tr>';
+      }).join('');
+    } catch (err) {
+      bodyEl.innerHTML = '<tr class="empty-row"><td colspan="3">Could not load signatures right now.</td></tr>';
+    }
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    statusEl.textContent = '';
+    statusEl.className = 'status';
+
+    const studentId = idInput.value.trim();
+    const firstName = firstInput.value.trim();
+    const lastName = lastInput.value.trim();
+
+    if (!/^\d{6}$/.test(studentId)) {
+      statusEl.textContent = 'Student ID must be exactly 6 digits.';
+      statusEl.className = 'status error';
+      return;
+    }
+    if (!firstName || !lastName) {
+      statusEl.textContent = 'Please enter your first and last name.';
+      statusEl.className = 'status error';
+      return;
+    }
+    if ((firstName + lastName).length > 25) {
+      statusEl.textContent = 'First and last name together must be 25 characters or fewer.';
+      statusEl.className = 'status error';
+      return;
+    }
+
+    const statementText = statementInput.value.trim();
+    if (statementText.length > 280) {
+      statusEl.textContent = 'Statement must be 280 characters or fewer.';
+      statusEl.className = 'status error';
+      return;
+    }
+    if (containsBlockedWord(statementText)) {
+      statusEl.textContent = 'Please rephrase your statement — that wording won\'t be shown publicly.';
+      statusEl.className = 'status error';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    statusEl.textContent = 'Submitting…';
+    statusEl.className = 'status';
+
+    const signatureData = hasSignature ? canvas.toDataURL('image/png') : null;
+
+    try {
+      const { error } = await supabase
+        .from('petition_signatures')
+        .insert({
+          student_id: studentId,
+          first_name: firstName,
+          last_name: lastName,
+          statement: statementText || null,
+          signature_data: signatureData
+        });
+
+      if (error) throw error;
+
+      localStorage.setItem(DEVICE_KEY, studentId);
+      statusEl.textContent = '';
+      lockFormAsSigned(studentId);
+      loadSignatures();
+    } catch (err) {
+      submitBtn.disabled = false;
+      if (err && err.code === '23505') {
+        statusEl.textContent = 'That ID has already signed the petition.';
+      } else {
+        statusEl.textContent = 'Something went wrong — please try again.';
+      }
+      statusEl.className = 'status error';
+    }
+  });
+
+  refreshBtn.addEventListener('click', loadSignatures);
+
+  checkDeviceLock();
+  loadSignatures();
+})();
+</script>
+</body>
+</html>
